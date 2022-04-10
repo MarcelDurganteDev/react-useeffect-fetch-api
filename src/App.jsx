@@ -1,8 +1,4 @@
 import { useState, useEffect } from 'react';
-const cors = require( 'cors' );
-// var app = express();
-
-// app.use( cors() );
 
 export default function App() {
     const [news, setNews] = useState([]);
