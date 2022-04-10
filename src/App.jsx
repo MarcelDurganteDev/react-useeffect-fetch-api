@@ -6,12 +6,21 @@ export default function App() {
     const [url, setUrl] = useState(
         `https://hn.algolia.com/api/v1/search?query=${searchQuery}`
     );
+    const [isLoading, setIsLoading] = useState( false );
 
-    const fetchNews = () => {
-        fetch(`https://hn.algolia.com/api/v1/search?query=${searchQuery}`)
-            .then(result => result.json())
-            .then(data => setNews(data.hits))
-            .catch(error => console.log(error));
+    const fetchNews = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch( `https://hn.algolia.com/api/v1/search?query=${searchQuery}` )
+            const data = await response.json();
+            setNews( data.hits );
+            setIsLoading( false );
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            setIsLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -32,6 +41,7 @@ export default function App() {
     return (
         <div>
             <h2>News Titles</h2>
+            {isLoading ? <p>Loading...</p> : ''}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
