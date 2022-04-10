@@ -1,23 +1,29 @@
+import { useState, useEffect } from 'react';
+const cors = require( 'cors' );
+// var app = express();
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// app.use( cors() );
+
+export default function App() {
+    const [news, setNews] = useState([]);
+
+    const fetchNews = () => {
+        fetch('https://hn.algolia.com/api/v1/search?query=react')
+            .then(result => result.json())
+            .then(data => setNews(data.hits))
+          .catch( error => console.log( error ) );
+    };
+
+    useEffect(() => {
+        fetchNews();
+    },[]);
+
+    return (
+        <div>
+            <h2>News Titles</h2>
+            {news.map((n, index) => (
+                <p key={index}>{n.title}</p>
+            ))}
+        </div>
+    );
 }
-
-export default App;
